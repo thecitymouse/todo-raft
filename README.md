@@ -1,8 +1,6 @@
 # todo-raft
 
-WHAT KIND OF CONSENSUS IS YOUR TYPE?
-
-minimal raft in rust. no runtime. no async. bring your own network/storage.
+minimal raft in rust. no runtime. no async. bring your own network/storage. 
 
 ## features
 - leader election (prevote)
