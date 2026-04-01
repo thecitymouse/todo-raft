@@ -210,7 +210,7 @@ pub struct ReadIndexResp {
 
 // Three traits (LogStore, StateMachine, Transport) instead of one so Rust
 // can borrow them independently, e.g. read from log while calling apply().
-pub trait LogStore: Send {
+pub trait LogStore {
     fn persist_vote(&mut self, term: Term, voted_for: Option<NodeId>) -> Result<()>;
     fn load_vote(&mut self) -> Result<(Term, Option<NodeId>)>;
 
@@ -231,7 +231,7 @@ pub trait LogStore: Send {
 }
 
 /// State machine application + snapshot operations.
-pub trait StateMachine: Send {
+pub trait StateMachine {
     fn apply(&mut self, index: LogIndex, entry: &LogEntry) -> Result<()>;
     fn apply_batch(&mut self, start: LogIndex, entries: &[LogEntry]) -> Result<()> {
         for (i, e) in entries.iter().enumerate() {
@@ -254,7 +254,7 @@ pub trait StateMachine: Send {
 /// Takes &self (not &mut self) so you can call transport methods while
 /// holding mutable borrows on other parts of RaftCore.  Implementations
 /// typically use interior mutability (channels, Arc<Mutex<...>>, etc).
-pub trait Transport: Send {
+pub trait Transport {
     fn send_request_vote(&self, to: NodeId, msg: &RequestVote) -> Result<()>;
     fn send_append_entries(&self, to: NodeId, msg: &AppendEntries) -> Result<()>;
     fn send_install_snapshot(&self, to: NodeId, msg: &InstallSnapshot) -> Result<()>;
