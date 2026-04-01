@@ -280,12 +280,16 @@ impl Raft {
     }
 
     // === State transitions ===
-    
+
     pub fn become_follower(&mut self, term: Term, leader: Option<NodeId>) {
         self.clear_pending_reads();
 
-        self.core.current_term = term;
-        self.core.voted_for = None;
+        if term > self.core.current_term {
+            self.core.current_term = term;
+            self.core.voted_for = None;
+        }
+
+
         self.role = Role::Follower { leader };
         self.reset_election_deadline();
 
