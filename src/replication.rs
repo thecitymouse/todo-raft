@@ -364,9 +364,9 @@ impl Raft {
             return Err(e);
         }
 
-        let _ = self.core.log_store.fsync();
+        self.do_fsync(index)?;
 
-        if self.core.num_nodes() == 1 {
+        if self.core.num_nodes() == 1 && self.core.durable_index >= index {
             self.core.commit_index = index;
         }
 
